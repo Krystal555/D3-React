@@ -9,8 +9,9 @@ export default{
         let svg = d3.select('svg');
         //删除旧路径数据
         svg.select('.d3-line').remove();
+
         //设置直线路径的拖拽行为
-        let drag = d3.drag()
+        /*let drag = d3.drag()
             .on('start',function(){
                 d3.select(this).classed('active',true)
             })
@@ -24,10 +25,7 @@ export default{
                     .attr('y1',(+initialY1 + d3.event.dy).toFixed(1))
                     .attr('x2',(+initialX2 + d3.event.dx).toFixed(1))
                     .attr('y2',(+initialY2 + d3.event.dy).toFixed(1));
-                /*在路径被拖动后，不仅要修改路径的x1y1x2y2属性，
-                 还要修改lineArray里对应路径的x1y1x2y2坐标，
-                 这个坐标相对的是仓库地理坐标不是地图坐标
-                 */
+                //在路径被拖动后,不仅要修改路径的x1y1x2y2属性,还要修改lineArray里对应路径的x1y1x2y2坐标,这个坐标相对的是仓库地理坐标不是地图坐标
                 let id = this.getAttribute('id');
                 lineArray.forEach(function(line){
                     if(line[0] == id){
@@ -40,7 +38,8 @@ export default{
             })
             .on('end',function(){
                 d3.select(this).classed('active',false)
-            });
+            });*/
+
         //定义箭头标识
         let d3Line = svg.append('g')
             .attr('class','d3-line');
@@ -59,18 +58,9 @@ export default{
         arrowMarker.append("path")
             .attr("d",arrow_path)
             .attr("fill","red");
-        //画直线路径（根据两点画标线，是输入单独两点来画）
-        /*d3StraightLine.append("line")
-            .attr("class","straightPath")
-            .attr("stroke","purple")
-            .attr("stroke-width",2)
-            .attr("marker-end","url(#arrow)")
-            .attr("x1",xScale(point1[0]+0.4))
-            .attr("y1",yScale(point1[1]+0.4))
-            .attr("x2",xScale(point2[0]-1))
-            .attr("y2",yScale(point2[1]-1))
-            .call(drag);*/
+
         //算出直线两点的方向向量，起始点都分别加上（减去）半径所占的x,y
+        //输入的是以仓库为标准的尺寸（小尺寸）
         lineArray.forEach(function(line){
             let x1 = line[1][0][0];
             let y1 = line[1][0][1];
@@ -108,8 +98,9 @@ export default{
             drawY1 = (y1+dy1);
             drawX2 = (x2-dx2);
             drawY2 = (y2-dy2);
-            line.push([[drawX1,drawY1],[drawX2,drawY2]]);
+            line[4] = [[drawX1,drawY1],[drawX2,drawY2]];
         });
+
         //画直线路径（根据两点画标线,是输入lineArray来画）
         d3StraightLine.selectAll("line")
             .data(lineArray)
@@ -134,7 +125,19 @@ export default{
             .attr("y2",function(d){
                 return yScale(d[4][1][1])
             })
-            .call(drag);
+            .attr("initialX1",function(d){
+                return xScale(d[1][0][0]).toFixed(2)
+            })
+            .attr("initialY1",function(d){
+                return yScale(d[1][0][1]).toFixed(2)
+            })
+            .attr("initialX2",function(d){
+                return xScale(d[1][1][0]).toFixed(2)
+            })
+            .attr("initialY2",function(d){
+                return yScale(d[1][1][1]).toFixed(2)
+            });
+            //.call(drag);
 
         //为路径添加右键点击事件
         let lines = svg.selectAll('line');
@@ -147,63 +150,6 @@ export default{
             })
         });
 
-        /*if((point1[0]===point2[0])&&(point1[1]<point2[1])){
-            g.append("line")
-                .attr("class","straightPath")
-                .attr("stroke","purple")
-                .attr("stroke-width",2)
-                .attr("marker-end","url(#arrow)")
-                .attr("x1",xScale(point1[0]))
-                .attr("y1",yScale(point1[1]+0.4))
-                .attr("x2",xScale(point2[0]))
-                .attr("y2",yScale(point2[1]-1.5))
-                .call(drag);
-        }else if((point1[0]===point2[0])&&(point1[1]>point2[1])){
-            g.append("line")
-                .attr("class","straightPath")
-                .attr("stroke","purple")
-                .attr("stroke-width",2)
-                .attr("marker-end","url(#arrow)")
-                .attr("x1",xScale(point1[0]))
-                .attr("y1",yScale(point1[1]-0.4))
-                .attr("x2",xScale(point2[0]))
-                .attr("y2",yScale(point2[1]+1.5))
-                .call(drag);
-        }else if((point1[1]===point2[1])&&(point1[0]>point2[0])){
-            g.append("line")
-                .attr("class","straightPath")
-                .attr("stroke","purple")
-                .attr("stroke-width",2)
-                .attr("marker-end","url(#arrow)")
-                .attr("x1",xScale(point1[0]-0.4))
-                .attr("y1",yScale(point1[1]))
-                .attr("x2",xScale(point2[0]+1.5))
-                .attr("y2",yScale(point2[1]))
-                .call(drag);
-        }else if((point1[1]===point2[1])&&(point1[0]<point2[0])){
-            g.append("line")
-                .attr("class","straightPath")
-                .attr("stroke","purple")
-                .attr("stroke-width",2)
-                .attr("marker-end","url(#arrow)")
-                .attr("x1",xScale(point1[0]+0.4))
-                .attr("y1",yScale(point1[1]))
-                .attr("x2",xScale(point2[0]-1.5))
-                .attr("y2",yScale(point2[1]))
-                .call(drag);
-        }
-        else{
-            g.append("line")
-                .attr("class","straightPath")
-                .attr("stroke","purple")
-                .attr("stroke-width",2)
-                .attr("marker-end","url(#arrow)")
-                .attr("x1",xScale(point1[0]+0.4))
-                .attr("y1",yScale(point1[1]+0.4))
-                .attr("x2",xScale(point2[0]-1))
-                .attr("y2",yScale(point2[1]-1))
-                .call(drag);
-        }*/
     },
 
     //画贝塞尔曲线路径函数
