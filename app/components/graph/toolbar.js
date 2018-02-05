@@ -17,6 +17,9 @@ export default class ToolBar extends React.Component{
     drawStraightLine(){
         this.props.drawStraightLine();
     }
+    drawBothWayLine(){
+        this.props.drawBothWayLine();
+    }
 
     render(){
         return(
@@ -33,8 +36,9 @@ export default class ToolBar extends React.Component{
                     <Button onClick={this.pointClick.bind(this,9)}>入口点</Button>
                     <Button onClick={this.pointClick.bind(this,10)}>电梯点</Button>
                     <Button onClick={this.pointClick.bind(this,11)}>悬挂点</Button>
-                    <Button onClick={this.drawStraightLine.bind(this)}>画直线</Button>
-                    <Button onClick={this.pointClick.bind(this,13)}>画弧线</Button>
+                    <Button onClick={this.drawStraightLine.bind(this)}>直线</Button>
+                    <Button onClick={this.drawBothWayLine.bind(this)}>双向</Button>
+                    <Button onClick={this.pointClick.bind(this,13)}>弧线</Button>
                 </ButtonGroup>
             </div>
         );

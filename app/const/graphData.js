@@ -41,6 +41,7 @@ let graphData = {
         [{'id': 11},{'source':[20,20]},{'end':[25,15]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 12},{'source':[20,20]},{'end':[38,24]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 13},{'source':[20,20]},{'end':[26,32]},{'type':'straightLine'},{'direction':'forward'}],
+        [{'id': 14},{'source':[77,88]},{'end':[79,50]},{'type':'straightLine'},{'direction':'bothWay'}],
     ]
 };
 export default{
@@ -57,16 +58,32 @@ export default{
     },
     getLineArray(){
         let lineArray = [];
+        let bothWayLineArray = [];
         let line = [];
         graphData.line.forEach(function(node){
-            line.push(node[0].id);
-            line.push([node[1].source,node[2].end]);
-            line.push(node[3].type);
-            line.push(node[4].direction);
-            lineArray.push(line);
-            line=[];
+            if(node[3].type === 'straightLine'){ //直线
+                if(node[4].direction === 'forward'){ //正向直线
+                    line.push(node[0].id);
+                    line.push([node[1].source,node[2].end]);
+                    line.push(node[3].type);
+                    line.push(node[4].direction);
+                    lineArray.push(line);
+                    line=[];
+                }else if(node[4].direction === 'bothWay'){ //双向直线
+                    line.push(node[0].id);
+                    line.push([node[1].source,node[2].end]);
+                    line.push(node[3].type);
+                    line.push(node[4].direction);
+                    bothWayLineArray.push(line);
+                    line=[];
+                }
+            }
+
         });
-        return lineArray;
+        return {
+            lineArray:lineArray,
+            bothWayLineArray:bothWayLineArray
+        }
     }
 }
 

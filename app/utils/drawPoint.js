@@ -2,10 +2,7 @@
  * Created by zaoyu on 2018/1/31.
  */
 import * as d3 from 'd3';
-import drawLine from './drawSinglePath';
-const drawSinglePath = drawLine.drawSingleLine;
-import drawPath from './drawPath';
-const drawStraightPath = drawPath.drawStraightPath;
+
 import dragPoint from './dragPoint';
 let drag = dragPoint.dragPoint;
 
@@ -33,7 +30,6 @@ export default {
                 return yScale(d[1][1]).toFixed(2);
             })
             .attr('r',8)
-            //.attr('cursor','pointer')//鼠标设置成手指形状
             .call(drag(pointArray,lineArray));
 
         //为节点添加右键编辑事件，待开发

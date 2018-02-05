@@ -3,8 +3,8 @@
  */
 import * as d3 from 'd3';
 
-import drawLine from './drawSinglePath';
-const drawSinglePath = drawLine.drawSingleLine;
+import drawLine from './drawSingleLine';
+const drawSingleLine = drawLine.drawSingleLine;
 
 export default {
     dragPoint(pointArray,lineArray){
@@ -23,25 +23,27 @@ export default {
                 let initialCx = this.getAttribute('initialCx');//获得圆心的初始x坐标
                 let initialCy = this.getAttribute('initialCy');//获得圆心的初始y坐标
 
-                d3.select(".d3-straightLine").selectAll("line")
+                d3.select(".d3-line").selectAll("line")
                     .each(function(line){
                         //如果路径的终点圆心坐标(initialX2,initialY2)或者起点圆心坐标(initialX1,initialY1)等于圆心初始坐标，那就得跟着该圆一起动
                         if(+d3.select(this).attr('initialX2')===+initialCx && +d3.select(this).attr('initialY2')===+initialCy) {
                             let x1 = d3.select(this).attr('initialX1');//路径的起始圆心坐标不变initialX1，initialY1
                             let y1 = d3.select(this).attr('initialY1');
+                            let flag = d3.select(this).attr('direction')==='bothWay';//flag为true表示这条路径是双向,否则是单向(画图所需)
                             d3.select(this)
-                                .attr('x1', (drawSinglePath(+x1,+y1,d3.event.x,d3.event.y).x1))//获得路径的圆边坐标
-                                .attr('y1', (drawSinglePath(+x1,+y1,d3.event.x,d3.event.y).y1))
-                                .attr('x2', (drawSinglePath(+x1,+y1,d3.event.x,d3.event.y).x2))
-                                .attr('y2', (drawSinglePath(+x1,+y1,d3.event.x,d3.event.y).y2))
+                                .attr('x1', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).x1))//获得路径的圆边坐标
+                                .attr('y1', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).y1))
+                                .attr('x2', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).x2))
+                                .attr('y2', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).y2))
                         }else if(+d3.select(this).attr('initialX1')===+initialCx && +d3.select(this).attr('initialY1')===+initialCy) {
                             let x2 = d3.select(this).attr('initialX2');//路径的终点圆心坐标不变initialX2，initialY2
                             let y2 = d3.select(this).attr('initialY2');
+                            let flag = d3.select(this).attr('direction')==='bothWay';//flag为true表示这条路径是双向,否则是单向(画图所需)
                             d3.select(this)
-                                .attr('x1', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).x1))//获得路径的圆边坐标
-                                .attr('y1', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).y1))
-                                .attr('x2', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).x2))
-                                .attr('y2', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).y2))
+                                .attr('x1', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).x1))//获得路径的圆边坐标
+                                .attr('y1', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).y1))
+                                .attr('x2', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).x2))
+                                .attr('y2', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).y2))
                         }
                     })
             })
@@ -52,7 +54,7 @@ export default {
                 d3.select(this)
                     .attr('initialCx',(d3.event.x).toFixed(2))//改变圆心移动结束后的坐标
                     .attr('initialCy',(d3.event.y).toFixed(2));
-                d3.select(".d3-straightLine").selectAll("line")
+                d3.select(".d3-line").selectAll("line")
                     .each(function(line){
                         //如果路径的终点圆心坐标(initialX2,initialY2)等于圆心初始坐标(initialCx,initialCy)，那么这条路径的initialX2,initialY2也得改变
                         if(+d3.select(this).attr('initialX2')===+initialCx && +d3.select(this).attr('initialY2')===+initialCy) {

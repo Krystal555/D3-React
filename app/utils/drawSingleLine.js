@@ -3,8 +3,9 @@
  * 得到地图上画路径的实际坐标drawX1,drawY1,drawX2,drawY2(圆边缘)
  */
 export default{
-    drawSingleLine(x1,y1,x2,y2){ //两个圆心距离
-        let dx1, dy1, dx2, dy2, value, angle, drawX1, drawY1, drawX2, drawY2, r1 = 8, r2 = 14;
+    drawSingleLine(x1,y1,x2,y2,flag){ //两个圆心距离
+        let dx1, dy1, dx2, dy2, value, angle, drawX1, drawY1, drawX2, drawY2, r1, r2 = 14;
+        r1 = flag ? 14 : 8;
         if (x2 === x1 && y2 < y1) {
             dx1 = 0;
             dy1 = -r1;
