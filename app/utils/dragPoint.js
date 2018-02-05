@@ -1,5 +1,5 @@
 /**
- * 拖拽节点函数，节点移动时与之相连的入度路径也移动
+ * 拖拽节点函数，节点移动时与之相连的路径也移动
  */
 import * as d3 from 'd3';
 
@@ -8,7 +8,7 @@ const drawSinglePath = drawLine.drawSingleLine;
 
 export default {
     dragPoint(pointArray,lineArray){
-        //设置节点的拖拽行为，节点移动时所有入度的线也跟着一起移动
+        //设置节点的拖拽行为，节点移动时所有路径也跟着一起移动
         return d3.drag()
             .on('start',function(){
                 d3.select(this).classed('active',true)
@@ -22,9 +22,10 @@ export default {
 
                 let initialCx = this.getAttribute('initialCx');//获得圆心的初始x坐标
                 let initialCy = this.getAttribute('initialCy');//获得圆心的初始y坐标
+
                 d3.select(".d3-straightLine").selectAll("line")
                     .each(function(line){
-                        //如果路径的终点圆心坐标（initialX2，initialY2）等于圆心初始坐标，那就得跟着该圆一起动
+                        //如果路径的终点圆心坐标(initialX2,initialY2)或者起点圆心坐标(initialX1,initialY1)等于圆心初始坐标，那就得跟着该圆一起动
                         if(+d3.select(this).attr('initialX2')===+initialCx && +d3.select(this).attr('initialY2')===+initialCy) {
                             let x1 = d3.select(this).attr('initialX1');//路径的起始圆心坐标不变initialX1，initialY1
                             let y1 = d3.select(this).attr('initialY1');
@@ -33,6 +34,14 @@ export default {
                                 .attr('y1', (drawSinglePath(+x1,+y1,d3.event.x,d3.event.y).y1))
                                 .attr('x2', (drawSinglePath(+x1,+y1,d3.event.x,d3.event.y).x2))
                                 .attr('y2', (drawSinglePath(+x1,+y1,d3.event.x,d3.event.y).y2))
+                        }else if(+d3.select(this).attr('initialX1')===+initialCx && +d3.select(this).attr('initialY1')===+initialCy) {
+                            let x2 = d3.select(this).attr('initialX2');//路径的终点圆心坐标不变initialX2，initialY2
+                            let y2 = d3.select(this).attr('initialY2');
+                            d3.select(this)
+                                .attr('x1', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).x1))//获得路径的圆边坐标
+                                .attr('y1', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).y1))
+                                .attr('x2', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).x2))
+                                .attr('y2', (drawSinglePath(d3.event.x,d3.event.y,+x2,+y2).y2))
                         }
                     })
             })
@@ -45,10 +54,10 @@ export default {
                     .attr('initialCy',(d3.event.y).toFixed(2));
                 d3.select(".d3-straightLine").selectAll("line")
                     .each(function(line){
-                        //如果路径的终点圆心坐标(initialX2,initialY2）等于圆心初始坐标(initialCx,initialCy)，那么这条路径的initialX2,initialY2也得改变
+                        //如果路径的终点圆心坐标(initialX2,initialY2)等于圆心初始坐标(initialCx,initialCy)，那么这条路径的initialX2,initialY2也得改变
                         if(+d3.select(this).attr('initialX2')===+initialCx && +d3.select(this).attr('initialY2')===+initialCy) {
                             d3.select(this)
-                                .attr("initialX2",(d3.event.x).toFixed(2))//修改路径的终点圆心坐标initialX2，initialY2
+                                .attr("initialX2",(d3.event.x).toFixed(2))//修改路径的终点圆心坐标initialX2,initialY2
                                 .attr("initialY2",(d3.event.y).toFixed(2));
                             //在节点拖动停止后,路径的x1y1x2y2属性不仅要改变,还要改变lineArray里对应路径的x1,y1,x2,y2坐标和initialX2,initialY2坐标,这个坐标是仓库坐标不是地图坐标
                             let lineId = d3.select(this).attr('id');
@@ -62,10 +71,27 @@ export default {
                                     line[4] = [[x1,y1],[x2,y2]];//x1,y1,x2,y2
                                 }
                             })
+                        //如果路径的起点圆心坐标(initialX1,initialY1)等于圆心初始坐标(initialCx,initialCy)，那么这条路径的initialX1,initialY1也得改变
+                        }else if(+d3.select(this).attr('initialX1')===+initialCx && +d3.select(this).attr('initialY1')===+initialCy) {
+                            d3.select(this)
+                                .attr("initialX1",(d3.event.x).toFixed(2))//修改路径的起始圆心坐标initialX1,initialY1
+                                .attr("initialY1",(d3.event.y).toFixed(2));
+                            //在节点拖动停止后,路径的x1y1x2y2属性不仅要改变,还要改变lineArray里对应路径的x1,y1,x2,y2坐标和initialX1,initialY1坐标,这个坐标是仓库坐标不是地图坐标
+                            let lineId = d3.select(this).attr('id');
+                            let x1 = d3.select(this).attr('x1');
+                            let y1 = d3.select(this).attr('y1');
+                            let x2 = d3.select(this).attr('x2');
+                            let y2 = d3.select(this).attr('y2');
+                            lineArray.forEach(function(line){
+                                if(+line[0] === +lineId){
+                                    line[1][0] = [(d3.event.x)/10,(d3.event.y)/10];//initial
+                                    line[4] = [[x1,y1],[x2,y2]];//x1,y1,x2,y2
+                                }
+                            })
                         }
-                    })
+                    });
 
-                //在节点被拖动后,节点的cx和cy属性不仅要改变,还要改变pointArray里对应节点的坐标,这个坐标相对的是仓库坐标不是地图坐标
+                //在节点被拖动后,节点的cx和cy属性不仅要改变,还要改变pointArray里对应节点的圆心坐标,这个坐标相对的是仓库坐标不是地图坐标
                 let pointId = d3.select(this).attr('id');
                 pointArray.forEach(function(point){
                     if(+point[0] === +pointId){

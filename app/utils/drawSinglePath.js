@@ -1,5 +1,6 @@
 /**
  * 输入的x1,y1,x2,y2是以地图为标准的尺寸（大尺寸）
+ * 得到地图上画路径的实际坐标drawX1,drawY1,drawX2,drawY2(圆边缘)
  */
 export default{
     drawSingleLine(x1,y1,x2,y2){ //两个圆心距离

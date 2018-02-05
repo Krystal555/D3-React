@@ -18,52 +18,11 @@ import svgBackground from '../../Images/svg-background.jpg';
 import dragPoint from '../../utils/dragPoint';
 let drag = dragPoint.dragPoint;
 
-const drawMargin = {
+/*const drawMargin = {
     top: 20,
     right: 20,
     bottom: 20,
     left: 20
-};
-/*let graph = {
-    point: [
-        {'id': 1,'x':10,'y':10},
-        {'id': 2,'x':50,'y':50},
-        {'id': 3,'x':52,'y':26},
-        {'id': 4,'x':36,'y':32},
-        {'id': 5,'x':20,'y':20},
-        {'id': 6,'x':13,'y':63},
-        {'id': 7,'x':62,'y':5},
-        {'id': 8,'x':33,'y':66},
-        {'id': 9,'x':79,'y':50},
-        {'id': 10,'x':13,'y':32},
-        {'id': 11,'x':12,'y':5},
-        {'id': 12,'x':95,'y':17},
-        {'id': 13,'x':77,'y':88},
-        {'id': 14,'x':12,'y':100},
-        {'id': 15,'x':20,'y':10},
-        {'id': 16,'x':20,'y':30},
-        {'id': 17,'x':40,'y':20},
-        {'id': 18,'x':10,'y':20},
-        {'id': 19,'x':25,'y':15},
-        {'id': 20,'x':10,'y':30},
-        {'id': 21,'x':38,'y':24},
-        {'id': 22,'x':26,'y':32},
-    ],
-    line: [
-       {'id': 1,'source':5,'target':4,'type':'straightLine','direction':'forward'},
-        {'id': 2,'source':4,'target':2,'type':'straightLine','direction':'forward'},
-        {'id': 3,'source':2,'target':9,'type':'straightLine','direction':'forward'},
-        {'id': 4,'source':9,'target':2,'type':'straightLine','direction':'reverse'},
-        {'id': 5,'source':5,'target':20,'type':'straightLine','direction':'forward'},
-        {'id': 6,'source':5,'target':17,'type':'straightLine','direction':'forward'},
-        {'id': 7,'source':5,'target':18,'type':'straightLine','direction':'forward'},
-        {'id': 8,'source':5,'target':16,'type':'straightLine','direction':'forward'},
-        {'id': 9,'source':5,'target':15,'type':'straightLine','direction':'forward'},
-        {'id': 10,'source':5,'target':1,'type':'straightLine','direction':'forward'},
-        {'id': 11,'source':5,'target':19,'type':'straightLine','direction':'forward'},
-        {'id': 12,'source':[20,20],'target':[38,24],'type':'straightLine','direction':'forward'},
-        {'id': 13,'source':[20,20],'target':[26,32],'type':'straightLine','direction':'forward'},
-    ]
 };*/
 //画布的大小设置
 let width = 1200,height = 1000;
