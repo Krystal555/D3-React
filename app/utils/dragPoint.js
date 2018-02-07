@@ -29,21 +29,24 @@ export default {
                         if(+d3.select(this).attr('initialX2')===+initialCx && +d3.select(this).attr('initialY2')===+initialCy) {
                             let x1 = d3.select(this).attr('initialX1');//路径的起始圆心坐标不变initialX1，initialY1
                             let y1 = d3.select(this).attr('initialY1');
-                            let flag = d3.select(this).attr('direction')==='bothWay';//flag为true表示这条路径是双向,否则是单向(画图所需)
+                            let flag1 = d3.select(this).attr('direction')==='bothWay';//flag1为true表示这条路径是双向,否则是单向(画图所需)
+                            let flag2 = d3.select(this).attr('type')==='straightLine';//flag2为true表示这条路径是直线,否则是曲线(画图所需)
                             d3.select(this)
-                                .attr('x1', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).x1))//获得路径的圆边坐标
-                                .attr('y1', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).y1))
-                                .attr('x2', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).x2))
-                                .attr('y2', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag).y2))
+                                .attr('x1', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag1,flag2).x1))//获得路径的圆边坐标
+                                .attr('y1', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag1,flag2).y1))
+                                .attr('x2', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag1,flag2).x2))
+                                .attr('y2', (drawSingleLine(+x1,+y1,d3.event.x,d3.event.y,flag1,flag2).y2))
                         }else if(+d3.select(this).attr('initialX1')===+initialCx && +d3.select(this).attr('initialY1')===+initialCy) {
                             let x2 = d3.select(this).attr('initialX2');//路径的终点圆心坐标不变initialX2，initialY2
                             let y2 = d3.select(this).attr('initialY2');
-                            let flag = d3.select(this).attr('direction')==='bothWay';//flag为true表示这条路径是双向,否则是单向(画图所需)
+                            let flag1 = d3.select(this).attr('direction')==='bothWay';//flag1为true表示这条路径是双向,否则是单向(画图所需)
+                            let flag2 = d3.select(this).attr('type')==='straightLine';//flag2为true表示这条路径是直线,否则是曲线(画图所需)
+
                             d3.select(this)
-                                .attr('x1', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).x1))//获得路径的圆边坐标
-                                .attr('y1', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).y1))
-                                .attr('x2', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).x2))
-                                .attr('y2', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag).y2))
+                                .attr('x1', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag1,flag2).x1))//获得路径的圆边坐标
+                                .attr('y1', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag1,flag2).y1))
+                                .attr('x2', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag1,flag2).x2))
+                                .attr('y2', (drawSingleLine(d3.event.x,d3.event.y,+x2,+y2,flag1,flag2).y2))
                         }
                     })
             })

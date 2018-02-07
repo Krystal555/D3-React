@@ -13,12 +13,16 @@ import drawPath from '../../utils/drawPath';
 const drawStraightPath = drawPath.drawStraightPath;
 const drawBothWayPath = drawPath.drawBothWayPath;
 const drawCurvePath = drawPath.drawCurvePath;
+const drawArrow = drawPath.drawArrow;
 
 import drawPoint from '../../utils/drawPoint';
 const drawPicPoint = drawPoint.drawPoint;
 import svgBackground from '../../Images/svg-background.jpg';
+
 import dragPoint from '../../utils/dragPoint';
 let drag = dragPoint.dragPoint;
+import dragConPoint from '../../utils/dragControlPoint';
+let dragControlPoint = dragConPoint.dragControlPoint;
 
 /*const drawMargin = {
     top: 20,
@@ -37,6 +41,8 @@ console.log(`画布与仓库地图的比例:x轴-${xRatio},y轴-${yRatio}`);
 let pointArray = graphData.getPointArray();
 let lineArray = graphData.getLineArray().lineArray;
 let BothWayLineArray = graphData.getLineArray().bothWayLineArray;
+let curveArray = graphData.getLineArray().curveArray;
+let BothWayCurveArray = graphData.getLineArray().BothWayCurveArray;
 //创建svg的X轴和Y轴坐标
 let xScale = d3.scaleLinear()
     .domain([0,warehouseWidth])
@@ -116,18 +122,22 @@ export default class D3Container extends React.Component{
         svg.on('contextmenu',()=>{
             event.preventDefault();
         });
+
         //画初始所有站点
         drawPicPoint(xScale,yScale,pointArray,lineArray);
         svg.append('g')
             .attr('class','d3-line');//所有路径
+        //画路径的箭头
+        drawArrow();
         //画初始所有单向直线路径
         drawStraightPath(xScale,yScale,lineArray);
         //画初始所有双向直线路径
         drawBothWayPath(xScale,yScale,BothWayLineArray);
         //画初始所有单向曲线路径
-        drawCurvePath(svg,xScale,yScale,[13,63],[33,66]);
-        drawCurvePath(svg,xScale,yScale,[33,66],[13,63]);
-        drawCurvePath(svg,xScale,yScale,[36,32],[50,50]);
+        drawCurvePath(xScale,yScale,xRatio,yRatio,curveArray);
+      //drawCurvePath(xScale,yScale,[13,63],[33,66]);
+      //drawCurvePath(xScale,yScale,[33,66],[13,63]);
+      //drawCurvePath(xScale,yScale,[36,32],[50,50]);
     };
 
     //添加节点
@@ -159,7 +169,7 @@ export default class D3Container extends React.Component{
         let sourceX,sourceY,endX,endY;
         let svg = d3.select('.d3-svg');
         svg.on('click',null);
-        let circles = svg.selectAll('circle')
+        let circles = svg.select('.d3-point').selectAll('circle')
             .on('.drag',null) //取消拖拽行为
             .on('mousedown',function(point,index){
                 sourceX = this.getAttribute('cx');//被点击的起始节点坐标
@@ -177,9 +187,14 @@ export default class D3Container extends React.Component{
                     let type = 'straightLine';
                     let direction = 'forward';
                     lineArray.push([id,[[x1,y1],[x2,y2]],type,direction]);
-                    drawStraightPath(xScale,yScale,lineArray)
+                    drawStraightPath(xScale,yScale,lineArray);
                  }
             });
+        let controlCircles = svg.select('.d3-curveLine').selectAll('circle')
+            .on('.drag',null)
+            .on('mousedown',null)
+            .on('mouseup',null);
+
         //退出画单向直线路径
         document.onkeydown = function(event){
             let keyNum = window.event ? event.keyCode : e.which;
@@ -189,6 +204,7 @@ export default class D3Container extends React.Component{
                     .on('mousedown',null)
                     .on('mouseup',null)
                     .call(drag(pointArray,lineArray.concat(BothWayLineArray)));//恢复节点的拖拽行为
+                controlCircles.call(dragControlPoint());//恢复控制点的拖拽行为
             }
         }
     }
@@ -198,7 +214,7 @@ export default class D3Container extends React.Component{
         let sourceX,sourceY,endX,endY;
         let svg = d3.select('.d3-svg');
         svg.on('click',null);
-        let circles = svg.selectAll('circle')
+        let circles = svg.select('.d3-point').selectAll('circle')
             .on('.drag',null) //取消拖拽行为
             .on('mousedown',function(point,index){
                 sourceX = this.getAttribute('cx');//被点击的起始节点坐标
@@ -219,6 +235,10 @@ export default class D3Container extends React.Component{
                     drawBothWayPath(xScale,yScale,BothWayLineArray)
                 }
             });
+        let controlCircles = svg.select('.d3-curveLine').selectAll('circle')
+            .on('.drag',null)
+            .on('mousedown',null)
+            .on('mouseup',null);
         //退出画双向直线路径
         document.onkeydown = function(event){
             let keyNum = window.event ? event.keyCode : e.which;
@@ -228,6 +248,7 @@ export default class D3Container extends React.Component{
                     .on('mousedown',null)
                     .on('mouseup',null)
                     .call(drag(pointArray,lineArray.concat(BothWayLineArray)));//恢复节点的拖拽行为
+                controlCircles.call(dragControlPoint());//恢复控制点的拖拽行为
             }
         }
     }

@@ -42,6 +42,9 @@ let graphData = {
         [{'id': 12},{'source':[20,20]},{'end':[38,24]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 13},{'source':[20,20]},{'end':[26,32]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 14},{'source':[77,88]},{'end':[79,50]},{'type':'straightLine'},{'direction':'bothWay'}],
+        [{'id': 15},{'source':[13,63]},{'end':[33,66]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 16},{'source':[62,5]},{'end':[52,26]},{'type':'curveLine'},{'direction':'forward'}],
+        [{'id': 17},{'source':[40,20]},{'end':[52,26]},{'type':'curveLine'},{'direction':'bothWay'}],
     ]
 };
 export default{
@@ -59,6 +62,8 @@ export default{
     getLineArray(){
         let lineArray = [];
         let bothWayLineArray = [];
+        let curveArray = [];
+        let BothWayCurveArray = [];
         let line = [];
         graphData.line.forEach(function(node){
             if(node[3].type === 'straightLine'){ //直线
@@ -77,12 +82,30 @@ export default{
                     bothWayLineArray.push(line);
                     line=[];
                 }
+            }else if(node[3].type === 'curveLine'){ //曲线
+                if(node[4].direction === 'forward'){ //正向曲线
+                    line.push(node[0].id);
+                    line.push([node[1].source,node[2].end]);
+                    line.push(node[3].type);
+                    line.push(node[4].direction);
+                    curveArray.push(line);
+                    line=[];
+                }else if(node[4].direction === 'bothWay'){ //双向曲线
+                    line.push(node[0].id);
+                    line.push([node[1].source,node[2].end]);
+                    line.push(node[3].type);
+                    line.push(node[4].direction);
+                    BothWayCurveArray.push(line);
+                    line=[];
+                }
             }
 
         });
         return {
             lineArray:lineArray,
-            bothWayLineArray:bothWayLineArray
+            bothWayLineArray:bothWayLineArray,
+            curveArray:curveArray,
+            BothWayCurveArray:BothWayCurveArray
         }
     }
 }
