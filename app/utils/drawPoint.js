@@ -8,7 +8,7 @@ let drag = dragPoint.dragPoint;
 
 export default {
     //画节点函数
-    drawPoint(xScale,yScale,pointArray,lineArray){
+    drawPoint(xScale,yScale,xRatio,yRatio,pointArray,lineArray,curveArray,bothWayCurveArray){
         let svg = d3.select('svg');
         //删除旧节点数据
         svg.select('.d3-point').remove();
@@ -30,7 +30,7 @@ export default {
                 return yScale(d[1][1]).toFixed(2);
             })
             .attr('r',8)
-            .call(drag(pointArray,lineArray));
+            .call(drag(xRatio,yRatio,pointArray,lineArray,curveArray,bothWayCurveArray));
 
         //为节点添加右键编辑事件，待开发
         let circles = svg.selectAll('circle');

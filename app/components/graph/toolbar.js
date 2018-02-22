@@ -20,7 +20,12 @@ export default class ToolBar extends React.Component{
     drawBothWayLine(){
         this.props.drawBothWayLine();
     }
-
+    drawCurveLine(){
+        this.props.drawCurveLine();
+    }
+    drawBothWayCurve(){
+        this.props.drawBothWayCurve();
+    }
     render(){
         return(
             <div>
@@ -36,9 +41,10 @@ export default class ToolBar extends React.Component{
                     <Button onClick={this.pointClick.bind(this,9)}>入口点</Button>
                     <Button onClick={this.pointClick.bind(this,10)}>电梯点</Button>
                     <Button onClick={this.pointClick.bind(this,11)}>悬挂点</Button>
-                    <Button onClick={this.drawStraightLine.bind(this)}>直线</Button>
-                    <Button onClick={this.drawBothWayLine.bind(this)}>双向</Button>
-                    <Button onClick={this.pointClick.bind(this,13)}>弧线</Button>
+                    <Button onClick={this.drawStraightLine.bind(this)}>单向直线</Button>
+                    <Button onClick={this.drawBothWayLine.bind(this)}>双向直线</Button>
+                    <Button onClick={this.drawCurveLine.bind(this)}>单向曲线</Button>
+                    <Button onClick={this.drawBothWayCurve.bind(this)}>双向曲线</Button>
                 </ButtonGroup>
             </div>
         );

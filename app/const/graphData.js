@@ -33,18 +33,28 @@ let graphData = {
         [{'id': 3},{'source':[50,50]},{'end':[79,50]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 4},{'source':[79,50]},{'end':[50,50]},{'type':'straightLine'},{'direction':'reverse'}],
         [{'id': 5},{'source':[20,20]},{'end':[10,30]},{'type':'straightLine'},{'direction':'forward'}],
-        [{'id': 6},{'source':[20,20]},{'end':[40,20]},{'type':'straightLine'},{'direction':'forward'}],
+        //[{'id': 6},{'source':[20,20]},{'end':[40,20]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 7},{'source':[20,20]},{'end':[10,20]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 8},{'source':[20,20]},{'end':[20,30]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 9},{'source':[20,20]},{'end':[20,10]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 10},{'source':[20,20]},{'end':[10,10]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 11},{'source':[20,20]},{'end':[25,15]},{'type':'straightLine'},{'direction':'forward'}],
-        [{'id': 12},{'source':[20,20]},{'end':[38,24]},{'type':'straightLine'},{'direction':'forward'}],
-        [{'id': 13},{'source':[20,20]},{'end':[26,32]},{'type':'straightLine'},{'direction':'forward'}],
+        //[{'id': 12},{'source':[20,20]},{'end':[38,24]},{'type':'straightLine'},{'direction':'forward'}],
+        //[{'id': 13},{'source':[20,20]},{'end':[26,32]},{'type':'straightLine'},{'direction':'forward'}],
         [{'id': 14},{'source':[77,88]},{'end':[79,50]},{'type':'straightLine'},{'direction':'bothWay'}],
-        [{'id': 15},{'source':[13,63]},{'end':[33,66]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 15},{'source':[13,63]},{'end':[33,66]},{'type':'curveLine'},{'direction':'forward'}],
         //[{'id': 16},{'source':[62,5]},{'end':[52,26]},{'type':'curveLine'},{'direction':'forward'}],
-        [{'id': 17},{'source':[40,20]},{'end':[52,26]},{'type':'curveLine'},{'direction':'bothWay'}],
+        //[{'id': 17},{'source':[40,20]},{'end':[52,26]},{'type':'curveLine'},{'direction':'bothWay'}],
+        //[{'id': 18},{'source':[20,20]},{'end':[10,30]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 19},{'source':[20,20]},{'end':[40,20]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 20},{'source':[20,20]},{'end':[10,20]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 21},{'source':[20,20]},{'end':[20,30]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 22},{'source':[20,20]},{'end':[20,10]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 23},{'source':[20,20]},{'end':[10,10]},{'type':'curveLine'},{'direction':'forward'}],
+        //[{'id': 24},{'source':[20,20]},{'end':[25,15]},{'type':'curveLine'},{'direction':'forward'}],
+        [{'id': 25},{'source':[20,20]},{'end':[38,24]},{'type':'curveLine'},{'direction':'forward'}],
+        [{'id': 26},{'source':[20,20]},{'end':[26,32]},{'type':'curveLine'},{'direction':'forward'}],
+        [{'id': 27},{'source':[62,5]},{'end':[52,26]},{'type':'curveLine'},{'direction':'bothWay'}],
     ]
 };
 export default{
@@ -63,7 +73,7 @@ export default{
         let lineArray = [];
         let bothWayLineArray = [];
         let curveArray = [];
-        let BothWayCurveArray = [];
+        let bothWayCurveArray = [];
         let line = [];
         graphData.line.forEach(function(node){
             if(node[3].type === 'straightLine'){ //直线
@@ -95,7 +105,7 @@ export default{
                     line.push([node[1].source,node[2].end]);
                     line.push(node[3].type);
                     line.push(node[4].direction);
-                    BothWayCurveArray.push(line);
+                    bothWayCurveArray.push(line);
                     line=[];
                 }
             }
@@ -105,7 +115,7 @@ export default{
             lineArray:lineArray,
             bothWayLineArray:bothWayLineArray,
             curveArray:curveArray,
-            BothWayCurveArray:BothWayCurveArray
+            bothWayCurveArray:bothWayCurveArray
         }
     }
 }

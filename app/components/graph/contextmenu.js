@@ -18,7 +18,7 @@ export default class ContextMenu extends React.Component{
     render(){
         return(
             <div className="c-contextmenu">
-                查看信息
+
                {/* <List
                     size="small"
                     bordered
