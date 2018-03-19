@@ -174,7 +174,16 @@ export default class D3Container extends React.Component{
             let id = Math.random().toString().slice(-8);//随机生成8位的id号
             let newX = newPoint[0]/xRatio;
             let newY = newPoint[1]/yRatio;
-            pointArray.push([id,[newX,newY],pointType[index]]);
+            let flag = false;//判断新加的站点是否已存在
+            pointArray.some(function(point){
+               if(point[1][0]===newX && point[1][1]===newY){
+                   flag = true;//已经有该点存在了
+                   return true;//终止遍历
+               }
+            });
+            if(!flag){
+                pointArray.push([id,[newX,newY],pointType[index]]);
+            }
             console.log(pointArray);
             drawPicPoint(xScale,yScale,xRatio,yRatio,pointArray,lineArray.concat(bothWayLineArray),curveArray,bothWayCurveArray);
             //退出画节点
@@ -397,7 +406,6 @@ export default class D3Container extends React.Component{
             let start = pathArray[i];
             let end = pathArray[i+1];
             setTimeout(function(i){
-
                 vehicle1.attr('x',`${xScale(start[0])-15}`)
                     .attr('y',`${xScale(start[1])-15}`)
                     .transition()
