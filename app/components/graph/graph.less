@@ -1,8 +1,37 @@
 .d3Content{
-
+  //画布工具栏
   .ant-btn-group{
-    margin-bottom: 30px;
+    margin-bottom: 15px;
+    display: block;
+  }
+  //画布区
+  .d3Draw{
+    position: relative;
+
+    //右键菜单
+    .c-contextMenu{
+      display: none;
+      position: absolute;
+      background-color: #f0f0f0;
+      width: 115px;
+      font-size: 19px;
+
+      .m-contextMenuList{
+        list-style: none;
+        border:1px solid #dfdfdf;
+        padding: 0;
+        margin: 0;
+
+        li{
+          padding: 8px 0;
+          width: 100%;
+          text-align: center;
+          border-bottom: 1px solid #dfdfdf;
+        }
+      }
+      &.show{
+        display: inline-block;
+      }
+    }
   }
 }
-
-//右键菜单

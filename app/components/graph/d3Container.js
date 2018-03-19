@@ -6,7 +6,7 @@ import * as d3 from 'd3';
 
 import ToolBar from './toolbar';
 import './graph.less';
-import ContextMenu from './contextmenu';
+import ContextMenu from './contextMenu';
 import graphData from '../../const/graphData';
 //画直线、曲线路径以及路径箭头的函数
 import drawPath from '../../utils/drawPath';
@@ -18,6 +18,9 @@ const drawArrow = drawPath.drawArrow;
 //画节点函数
 import drawPoint from '../../utils/drawPoint';
 const drawPicPoint = drawPoint.drawPoint;
+//画小车函数
+import drawVehicle from '../../utils/drawVehicle';
+const drawPicVehicle = drawVehicle.drawVehicle;
 //地图背景
 import svgBackground from '../../Images/svg-background.jpg';
 //拖拽节点函数
@@ -26,7 +29,20 @@ let drag = dragPoint.dragPoint;
 //拖拽控制点函数
 import dragConPoint from '../../utils/dragControlPoint';
 let dragControlPoint = dragConPoint.dragControlPoint;
-
+//节点类型映射
+const pointType = {
+    1:'haltPoint',
+    2:'blockPoint',
+    3:'chargePoint',
+    4:'parkPoint',
+    5:'forkPoint',
+    6:'hangPoint',
+    7:'loadPoint',
+    8:'unloadPoint',
+    9:'exitPoint',
+    10:'entrancePoint',
+    11:'liftPoint'
+};
 /*const drawMargin = {
     top: 20,
     right: 20,
@@ -46,6 +62,7 @@ let lineArray = graphData.getLineArray().lineArray;
 let bothWayLineArray = graphData.getLineArray().bothWayLineArray;
 let curveArray = graphData.getLineArray().curveArray;
 let bothWayCurveArray = graphData.getLineArray().bothWayCurveArray;
+let vehicleArray = graphData.getVehicleArray();
 //创建svg的X轴和Y轴坐标
 let xScale = d3.scaleLinear()
     .domain([0,warehouseWidth])
@@ -87,7 +104,7 @@ export default class D3Container extends React.Component{
                 let k = d3.event.transform.k;
                 let x = d3.event.transform.x;
                 let y = d3.event.transform.y;
-                console.log(k,x,y)
+                console.log(k,x,y);
                 d3.selectAll('g')
                  .attr('transform',`translate(${x},${y})scale(${k})`)
             });
@@ -130,6 +147,8 @@ export default class D3Container extends React.Component{
         drawPicPoint(xScale,yScale,xRatio,yRatio,pointArray,lineArray.concat(bothWayLineArray),curveArray,bothWayCurveArray);
         svg.append('g')
             .attr('class','d3-line');//所有路径
+        svg.append('g')
+            .attr('class','d3-path');//小车运行路径
         //画路径的箭头
         drawArrow();
         //画初始所有单向直线路径
@@ -140,6 +159,8 @@ export default class D3Container extends React.Component{
         drawCurvePath(xScale,yScale,xRatio,yRatio,curveArray);
         //画初始所有双向曲线路径
         drawBothWayCurve(xScale,yScale,xRatio,yRatio,bothWayCurveArray);
+        //画初始所有小车
+        drawPicVehicle(xScale,yScale,xRatio,yRatio,vehicleArray);
     };
 
     //添加节点
@@ -153,7 +174,7 @@ export default class D3Container extends React.Component{
             let id = Math.random().toString().slice(-8);//随机生成8位的id号
             let newX = newPoint[0]/xRatio;
             let newY = newPoint[1]/yRatio;
-            pointArray.push([id,[newX,newY]]);
+            pointArray.push([id,[newX,newY],pointType[index]]);
             console.log(pointArray);
             drawPicPoint(xScale,yScale,xRatio,yRatio,pointArray,lineArray.concat(bothWayLineArray),curveArray,bothWayCurveArray);
             //退出画节点
@@ -322,6 +343,71 @@ export default class D3Container extends React.Component{
             }
         }
     }
+    //添加小车
+    addVehicle(){
+        /*let svg = d3.select('.d3-svg');
+        let circles = svg.selectAll('circle');
+        circles.on('mousedown',null);
+        circles.on('mouseup',null);
+        svg.on('click',()=>{
+            let newVehicle = d3.mouse(d3.event.currentTarget);
+            let id = Math.random().toString().slice(-8);//随机生成8位的id号
+            let newVehicleX = newVehicle[0]/xRatio;
+            let newVehicleY = newVehicle[1]/yRatio;
+            vehicleArray.push([id,[newVehicleX,newVehicleY],0]);
+            console.log(vehicleArray);
+            drawPicVehicle(xScale,yScale,xRatio,yRatio,vehicleArray);
+            //退出画小车
+            document.onkeydown = function(event){
+                let keyNum = window.event ? event.keyCode : e.which;
+                if(keyNum === 27){ //按下ESC键退出
+                    svg.on('click',null);
+                }
+            }
+        });*/
+        let pathArray=[
+            [77,88],
+            [79,50],
+            [50,50],
+            [36,32]
+        ];
+        let svg = d3.select('svg');
+        let d3Path = svg.select('.d3-path');
+        //删除旧路径数据
+        //svg.select('.d3-straightLine').remove();
+        /*for(let i = 0;i<pathArray.length-1;i++){
+            let start = pathArray[i];
+            let end = pathArray[i+1];
+            setTimeout(function(i){
+                let vehiclePath = d3Path.append('path')
+                    .attr("class","vehiclePath")
+                    .attr("stroke","yellow")
+                    .attr("stroke-width",2)
+                    .attr('stroke-dasharray','10,7')
+                    .attr('fill','none')
+                    .attr('d',`M${xScale(start[0])},${yScale(start[1])} L${xScale(start[0])},${yScale(start[1])}`)
+                    .transition()
+                    .duration(3000)
+                    .ease(d3.easeLinear)
+                    .attr('d',`M${xScale(start[0])},${yScale(start[1])} L${xScale(end[0])},${yScale(end[1])}`)
+            },3000*i);
+        }*/
+        let vehicle1 = svg.select('.d3-vehicle').select('rect');
+        for(let i = 0;i<pathArray.length-1;i++){
+            let start = pathArray[i];
+            let end = pathArray[i+1];
+            setTimeout(function(i){
+
+                vehicle1.attr('x',`${xScale(start[0])-15}`)
+                    .attr('y',`${xScale(start[1])-15}`)
+                    .transition()
+                    .duration(5000)
+                    .ease(d3.easeLinear)
+                    .attr('x',`${xScale(end[0])-15}`)
+                    .attr('y',`${xScale(end[1])-15}`)
+            },5000*i);
+        }
+    }
     render(){
         return(
             <div className="d3Content">
@@ -331,9 +417,11 @@ export default class D3Container extends React.Component{
                     drawBothWayLine={this.drawBothWayLine.bind(this)}
                     drawCurveLine={this.drawCurveLine.bind(this)}
                     drawBothWayCurve={this.drawBothWayCurve.bind(this)}
+                    addVehicle={this.addVehicle.bind(this)}
                 />
-                <div className="d3Draw" ref="d3Container"/>
-                {/*<ContextMenu/>*/}
+                <div className="d3Draw" ref="d3Container">
+                    <ContextMenu/>
+                </div>
             </div>
         );
     }

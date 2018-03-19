@@ -47,8 +47,33 @@ module.exports = {
                     id: 'js'
                 },
             },
-            {
+            /*{
                 test: /\.(less|css)$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: [{loader:'style-loader'}],
+                    use: [{
+                        loader: 'happypack/loader',
+                        options: {
+                            id: 'less'
+                        }
+                    }]
+                })
+            },*/
+            {
+                test: /(\.css)$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [{
+                        loader: 'happypack/loader',
+                        options: {
+                            id: 'css',
+                            minimize: true
+                        }
+                    }]
+                })
+            },
+            {
+                test: /(\.less)$/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: [{
@@ -59,7 +84,6 @@ module.exports = {
                     }]
                 })
             },
-
             {
                 oneOf: [
                     {
@@ -104,6 +128,38 @@ module.exports = {
             verbose: true,
             verboseWhenProfiling: true
         }),
+        /*new HappyPack({
+            id: 'less',
+            threadPool: happyThreadPool,
+            loaders: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        sourceMap: true
+                    }
+                },
+
+                {
+                    loader: 'less-loader',
+                    options: {
+                        sourceMap: true
+                    }
+                }],
+            verbose: true,
+            verboseWhenProfiling: true
+        }),*/
+        new HappyPack({
+            id: 'css',
+            threadPool: happyThreadPool,
+            loaders: [{
+                loader: 'css-loader',
+                options: {
+                    sourceMap: true
+                }
+            }],
+            verbose: true,
+            verboseWhenProfiling: true
+        }),
         new HappyPack({
             id: 'less',
             threadPool: happyThreadPool,
@@ -119,7 +175,8 @@ module.exports = {
                     options: {
                         sourceMap: true
                     }
-                }],
+                }
+            ],
             verbose: true,
             verboseWhenProfiling: true
         }),
